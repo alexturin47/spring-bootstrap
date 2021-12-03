@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import javax.xml.bind.ValidationException;
 import java.util.List;
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
 
     void saveUser(UserDto userDto) throws ValidationException;
     void deleteUser(Long id);

@@ -89,7 +89,7 @@
                     <h4 class="pl-4 pt-2 pb-3 bg-light border-bottom">Add new User</h4>
                     <div class="row justify-content-center">
                         <div class="col-4">
-                            <form th:action="@{/new}" th:method="POST" th:object="${user}" class="text-center">
+                            <form th:action="@{/admin/new}" th:method="POST" th:object="${user}" class="text-center">
                                 <div class="form-group text-center">
                                     <label for="firstname" class="font-weight-bold">Firstname</label>
                                     <input class="form-control bg-warning" type="text" th:field="*{firstname}" id="firstname" required/>

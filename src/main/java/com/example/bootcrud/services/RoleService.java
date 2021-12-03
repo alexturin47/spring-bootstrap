@@ -14,11 +14,11 @@ public interface RoleService {
 
     void save(Role role);
 
-    Role read(int id);
+    Role read(Long id);
 
     void update(Role role);
 
-    void delete(int id);
+    void delete(Long id);
 
     HashSet<Role> getRoleSet(String[] roles);
 }

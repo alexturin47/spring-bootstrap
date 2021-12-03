@@ -8,7 +8,7 @@
     <div class="container mt-3">
         <div class="row justify-content-center mt-3">
             <div class="col-7">
-                <form th:action="@{/{id}(id=${deleteUser.getId()})}"
+                <form th:action="@{/admin/delete/{id}(id=${deleteUser.getId()})}"
                       th:object="${deleteUser}"
                       th:method="DELETE"
                       id="delete-form"

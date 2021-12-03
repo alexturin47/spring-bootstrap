@@ -1,9 +1,9 @@
 package com.example.bootcrud.services;
 
+import com.example.bootcrud.dao.UserDao;
 import com.example.bootcrud.dto.UserDto;
 import com.example.bootcrud.entities.Role;
 import com.example.bootcrud.entities.User;
-import com.example.bootcrud.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,19 +14,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.ValidationException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
-
 @Service
-public class UserServiceImplement implements UserService {
+public class UserServiceImplement implements UserService, UserDetailsService {
 
-    private UserRepo userRepo;
+    private UserDao userDao;
     private UserConverter converter;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -37,8 +32,8 @@ public class UserServiceImplement implements UserService {
     }
 
     @Autowired
-    public void setUserRepo(UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 
 //    public User findByFirstname(String firstname) {
@@ -48,7 +43,7 @@ public class UserServiceImplement implements UserService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepo.findByEmail(s);
+        User user = userDao.findByEmail(s);
         if(user == null) {
             throw new UsernameNotFoundException(String.format("User %s not found", s));
         }
@@ -65,12 +60,12 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public void saveUser(UserDto userDto){
-        userRepo.save(converter.fromUserDtotoUser(userDto));
+        userDao.save(converter.fromUserDtotoUser(userDto));
     }
 
     @Override
     public void updateUser(UserDto userDto){
-        User user = userRepo.getById(userDto.getId());
+        User user = userDao.read(userDto.getId());
         user.setFirstname(userDto.getFirstname());
         user.setLastname(userDto.getLastname());
         if(!user.getPassword().equals(userDto.getPassword())) {
@@ -79,17 +74,17 @@ public class UserServiceImplement implements UserService {
         user.setEmail(userDto.getEmail());
         user.setAge(userDto.getAge());
         user.setRoles(userDto.getRoles());
-        userRepo.save(user);
+        userDao.save(user);
     }
 
     @Override
     public void deleteUser(Long id) {
-        userRepo.deleteById(id);
+        userDao.delete(id);
     }
 
     @Override
     public UserDto findByEmail(String email) {
-        User user = userRepo.findByEmail(email);
+        User user = userDao.findByEmail(email);
         if (user != null) {
             return converter.fromUserToUserDto(user);
         }
@@ -99,7 +94,7 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public List<UserDto> findAll() {
-        return userRepo.findAll()
+        return userDao.index()
                 .stream()
                 .map(converter::fromUserToUserDto)
                 .collect(Collectors.toList());

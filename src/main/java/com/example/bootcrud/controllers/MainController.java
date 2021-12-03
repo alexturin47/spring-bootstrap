@@ -7,10 +7,8 @@ import com.example.bootcrud.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.xml.bind.ValidationException;
 import java.security.Principal;
 
@@ -42,16 +40,6 @@ public class MainController {
         return "login";
     }
 
-    // перенаправление в зависимости от роли
-//    @GetMapping("/authorized")
-//    public String pageForAuthenticatedUsers(Principal principal) {
-//        UserDto user = userService.findByEmail(principal.getName());
-//        if(user.hasAuthorities("ADMIN")) {
-//            return "redirect:admin";
-//        } else {
-//            return "redirect:user";
-//        }
-//    }
 
 
     // вызов страницы админа
@@ -64,15 +52,7 @@ public class MainController {
     }
 
 
-    // редактирование юзера
-//    @GetMapping("/edit/{username}")
-//    public String edit(Model model, @PathVariable("username") String username) {
-//        model.addAttribute("user", userService.findByEmail(username));
-//        model.addAttribute("roles", roleServce.index());
-//        return "/edit";
-//    }
-
-    @PatchMapping( "/{email}")
+    @PatchMapping( "/admin/patch/{email}")
     public String updateAdmin(@ModelAttribute("user") UserDto userDto
             , @PathVariable("email") String email
             ,@RequestParam("roles") String[] roles) throws ValidationException {
@@ -86,14 +66,14 @@ public class MainController {
 
 
     // созадние нового юзера
-    @GetMapping("/new")
+    @GetMapping("admin/new")
     public String newUser(Model model) {
         model.addAttribute("user", new UserDto());
         model.addAttribute("roles", roleService.index());
         return "/new";
     }
 
-    @PostMapping("/new")
+    @PostMapping("admin/new")
     public String create(Model model, @ModelAttribute("user") UserDto userDto
             , @RequestParam(name = "roles", required = false) String[] roles) throws ValidationException {
 
@@ -104,20 +84,12 @@ public class MainController {
 
 
 
-    @DeleteMapping( "/{id}")
+    @DeleteMapping( "/admin/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
 
-
-    //  показ старницы профиля для админа
-//    @GetMapping("/admin/user/{username}")
-//    public String showUser(Model model, Principal principal, @PathVariable("username") String name) {
-//        model.addAttribute("user", userService.findByEmail(name));
-//        model.addAttribute("roles", roleService.index());
-//        return "/user";
-//    }
 
     //  показ старницы профиля для юзера
     @GetMapping("/user")

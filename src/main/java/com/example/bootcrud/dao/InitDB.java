@@ -1,4 +1,4 @@
-package com.example.bootcrud.repositories;
+package com.example.bootcrud.dao;
 
 import com.example.bootcrud.entities.Role;
 import com.example.bootcrud.entities.User;
@@ -12,36 +12,36 @@ import java.util.Set;
 @Component
 public class InitDB {
 
-    UserRepo userRepo;
-    RoleRepo roleRepo;
+    private UserDao userDao;
+    private RoleDao roleDao;
 
     @Autowired
-    public void setUserRepo(UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Autowired
-    public void setRoleRepo(RoleRepo roleRepo) {
-        this.roleRepo = roleRepo;
+    public void setRoleDao(RoleDao roleDao) {
+        this.roleDao = roleDao;
     }
 
     @PostConstruct
     private void saveUsers() {
-        if (roleRepo.findByname("ADMIN") == null) {
-            roleRepo.save(new Role("ADMIN"));
+        if (roleDao.findByname("ADMIN") == null) {
+            roleDao.save(new Role("ADMIN"));
         }
-        if (roleRepo.findByname("USER") == null) {
-            roleRepo.save(new Role("USER"));
+        if (roleDao.findByname("USER") == null) {
+            roleDao.save(new Role("USER"));
         }
 
         Set<Role> roles;
-        User admin = userRepo.findByEmail("admin@mail.ru");
+        User admin = userDao.findByEmail("admin@mail.ru");
         if ( admin == null ) {
 
             roles = new HashSet<>();
-            roles.add(roleRepo.findByname("USER"));
-            roles.add(roleRepo.findByname("ADMIN"));
-            userRepo.save(new User("admin"
+            roles.add(roleDao.findByname("USER"));
+            roles.add(roleDao.findByname("ADMIN"));
+            userDao.save(new User("admin"
                     , "adminnov"
                     , "$2a$12$AFJsSpNrJlC04sp2qGPcYepkRMy6rs1k3hNxeTxRMj0qZJ/aUK6X2"
                     , "admin@mail.ru"
@@ -50,11 +50,11 @@ public class InitDB {
         }
 
 
-        User user = userRepo.findByEmail("user@mail.ru");
+        User user = userDao.findByEmail("user@mail.ru");
         if ( user == null ) {
             roles = new HashSet<>();
-            roles.add(roleRepo.findByname("USER"));
-            userRepo.save(new User("user"
+            roles.add(roleDao.findByname("USER"));
+            userDao.save(new User("user"
                     , "userov"
                     , "$2y$12$wxbc/a4cb2t.s26ye.W0qew6JGXqi.fKtPvTIv9/7jww6U2eLSda."
                     , "user@mail.ru"

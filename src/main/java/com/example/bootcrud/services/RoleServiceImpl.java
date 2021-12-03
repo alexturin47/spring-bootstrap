@@ -1,7 +1,7 @@
 package com.example.bootcrud.services;
 
+import com.example.bootcrud.dao.RoleDao;
 import com.example.bootcrud.entities.Role;
-import com.example.bootcrud.repositories.RoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,46 +13,42 @@ import java.util.HashSet;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private RoleRepo roleRepo;
-
-    public RoleRepo getRoleDao() {
-        return roleRepo;
-    }
+    private RoleDao roleDao;
 
     @Override
     public Role findByname(String rolename) {
-        return roleRepo.findByname(rolename);
+        return roleDao.findByname(rolename);
     }
 
     @Override
     public HashSet<Role> index() {
-        return new HashSet<>(roleRepo.findAll());
+        return new HashSet<>(roleDao.index());
     }
 
     @Override
     public void save(Role role) {
-        roleRepo.save(role);
+        roleDao.save(role);
     }
 
     @Override
-    public Role read(int id) {
-        return roleRepo.getById(id);
+    public Role read(Long id) {
+        return roleDao.read(id);
     }
 
     @Override
     public void update(Role role) {
-        roleRepo.save(role);
+        roleDao.save(role);
     }
 
     @Override
-    public void delete(int id) {
-        roleRepo.deleteById(id);
+    public void delete(Long id) {
+        roleDao.delete(id);
     }
 
     public HashSet<Role> getRoleSet(String[] roles) {
         HashSet<Role> resSet = new HashSet<>();
         for( String roleId: roles) {
-            resSet.add(roleRepo.getById(Integer.parseInt(roleId)));
+            resSet.add(roleDao.read(Long.parseLong(roleId)));
         }
         return resSet;
     }
