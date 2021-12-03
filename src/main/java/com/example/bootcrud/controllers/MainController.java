@@ -125,6 +125,7 @@ public class MainController {
         UserDto user = userService.findByEmail(principal.getName());
         model.addAttribute("roles", roleService.index());
         model.addAttribute("user", user);
+        model.addAttribute("owner", userService.findByEmail(principal.getName()));
         return "user";
     }
 
